@@ -2479,14 +2479,11 @@ void setup()
   	Serial.begin(4800);	// opens serial port, sets data rate to 4800 bps
 //	lcd.begin(16, 4);
   display.begin();
-  // init done
   display.display();
-  //delay(2000);
   display.clearDisplay();
-  // draw a single pixel
   display.setTextSize(1);
   display.setTextColor(WHITE);
-  display.setCursor(0,0);
+  display.setCursor(0,0); // initialize frame buffer
 	for (int xg = 0 ; xg < 169 ; xg++) {
 		screenMem[xg] = 32;
 
@@ -2593,12 +2590,12 @@ static int inchar()
       if(Serial.available())
       {
         v2=Serial.read();
-        if(v2==113){
-          v2=61;
-          return v2;
-        }else{
-        return v2;
-        }
+        //if(v2==113){
+        //  v2=61;
+        //  return v2;
+        //}else{
+        //return v2;
+        //}
       }
     }
   }
