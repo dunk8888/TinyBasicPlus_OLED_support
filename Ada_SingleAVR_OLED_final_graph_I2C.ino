@@ -2743,7 +2743,7 @@ static void outchar(unsigned char c)
   putch(c);
 #endif
 }
-
+/////// Frame buffer part. Greately referred to Ben Heck's code for Ver.0.15 completion..
 static void lcdChar(byte c) {
 
 	if (c == 8) {	//Backspace?
@@ -2813,6 +2813,8 @@ static void doFrame(byte amount) {
 	//lcd.cursor();
 
 }
+//////// Frame buffer part ends...
+
 
 /***********************************************************/
 /* SD Card helpers */
