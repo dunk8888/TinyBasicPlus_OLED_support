@@ -8,6 +8,8 @@
 //          kodera2t
 
 #define kVersion "v0.151"
+// v0.151 05/02/2015 Minor bug fix regarding Chatpad produced character (chatpad is sending 0x00 for 
+// red/green function key pushing, and 0x00 from serial is setup to be ignored...)
 // v0.151 03/02/2015
 //      I2C support is added, currently working for BMP180 (pressure/temparature sensor).
 //      Related commands: TEMP PRES are added.
@@ -2685,11 +2687,8 @@ static int inchar()
       if(Serial.available())
       {
         v2=Serial.read();
-        if(v2==113){
-          v2=61;
+        if(v2!=00){
           return v2;
-        }else{
-        return v2;
         }
       }
     }
