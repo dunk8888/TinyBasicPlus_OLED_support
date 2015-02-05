@@ -18,6 +18,7 @@
 //      GRAPHIC related BASIC commands (currently supporting only direct command): 
 //      CLS, LINE x0,y0,x1,y1 CIRCLE x,y,radius FILLCIRCLE x,y,radius ROUNDRECT x,y,w,h,r
 //      FILLROUNDRECT x,y,w,h,r are added just for graphic test..
+//      chatpad 0x00 problem for control keys are fixed..
 // v0.14: 19/04/2014
 //      TVout and PS2uartKeyboard Libraries added.
 //
@@ -2590,12 +2591,9 @@ static int inchar()
       if(Serial.available())
       {
         v2=Serial.read();
-        //if(v2==113){
-        //  v2=61;
-        //  return v2;
-        //}else{
-        //return v2;
-        //}
+        if(v2!=00){
+          return v2;
+        }
       }
     }
   }
