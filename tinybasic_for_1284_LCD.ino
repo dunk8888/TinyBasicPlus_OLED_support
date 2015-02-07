@@ -2037,6 +2037,7 @@ static unsigned char breakcheck(void)
 static int inchar()
 {
   int v;
+  int v2;
 #ifdef ARDUINO
   
   switch( inStream ) {
@@ -2071,9 +2072,12 @@ static int inchar()
     while(1)
     {
       if(Serial.available())
-        return Serial.read();
-      else if (Serial.available())
-        return Serial.read();
+      {
+        v2=Serial.read();
+        if(v2!=00){
+          return v2;
+        }
+      }
     }
   }
   
