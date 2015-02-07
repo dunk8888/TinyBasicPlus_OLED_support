@@ -197,7 +197,7 @@ int eepos = 0;
 #define kSD_Fail  0
 #define kSD_OK    1
 
-//File fp;
+File fp;
 #endif
 #define RAMEND 10000
 // set up our RAM buffer size for program and user input
