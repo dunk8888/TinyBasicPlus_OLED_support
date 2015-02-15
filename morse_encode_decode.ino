@@ -147,8 +147,9 @@ if(c <= 128){
 			screenMem[21 + xg] = screenMem[42 + xg];		
 			screenMem[42 + xg] = screenMem[63 + xg];
 			screenMem[63 + xg] = screenMem[84 + xg];
-			screenMem[84 + xg] = screenMem[125 + xg];		
-			screenMem[125 + xg] = screenMem[146 + xg];
+			screenMem[84 + xg] = screenMem[105 + xg];
+			screenMem[105 + xg] = screenMem[126 + xg];		
+			screenMem[126 + xg] = screenMem[147 + xg];
 
 
 
