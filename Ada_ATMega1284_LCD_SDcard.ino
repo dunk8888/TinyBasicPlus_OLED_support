@@ -119,8 +119,8 @@
 #define TFT_RST    20  
 #define TFT_DC     19
 Adafruit_ST7735 tft = Adafruit_ST7735(TFT_CS,  TFT_DC, TFT_RST);
-#define TFT_SCLK 7   // set these to be whatever pins you like!
-#define TFT_MOSI 5   // set these to be whatever pins you like!
+//#define TFT_SCLK 7   // set these to be whatever pins you like!
+//#define TFT_MOSI 5   // set these to be whatever pins you like!
 
 int screenMem[316]; //the implementation of frame buffer is referenced from Ben Heck's
 int cursorX = 0;    //Retro BASIC computer's source

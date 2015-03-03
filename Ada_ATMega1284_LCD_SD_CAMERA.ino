@@ -131,7 +131,7 @@ Adafruit_ST7735 tft = Adafruit_ST7735(TFT_CS,  TFT_DC, TFT_RST);
 //#define TFT_SCLK 7   // set these to be whatever pins you like!
 //#define TFT_MOSI 5   // set these to be whatever pins you like!
 
-int screenMem[316]; //the implementation of frame buffer is referenced from Ben Heck's
+int screenMem[351]; //the implementation of frame buffer is referenced from Ben Heck's
 int cursorX = 0;    //Retro BASIC computer's source
 int checkChar = 0;
 
@@ -2455,7 +2455,8 @@ snap:
   {
 
   printmsg(picmsg);
-  delay(2000);
+  delay(1000);
+
 //      outStream = kStreamFile;
   if (! cam.takePicture())
   {
@@ -2511,6 +2512,7 @@ snap:
 //  Serial.print(time); Serial.println(" ms elapsed");
 ///////
 //    outStream = kStreamSerial;
+  cam.reset();
     goto run_next_statement;
   }////end camera part...
 
@@ -2572,7 +2574,7 @@ static void line_terminator(void)
 /***********************************************************/
 void setup()
 {
-#ifdef ARDUINO
+
 
 ////////////////////////////////////
     Serial.begin(4800);	// opens serial port for chatpad, sets data rate to 4800 bps
@@ -2620,7 +2622,21 @@ void setup()
 #endif /* ENABLE_EAUTORUN */
 #endif /* ENABLE_EEPROM */
 
-#endif /* ARDUINO */
+  // Try to locate the camera
+  if (cam.begin()) {
+  cameracheck=true;
+  // Set the picture size - you can choose one of 640x480, 320x240 or 160x120 
+  // Remember that bigger pictures take longer to transmit!
+  
+//  cam.setImageSize(VC0706_640x480);        // biggest
+  cam.setImageSize(VC0706_320x240);        // medium
+  //cam.setImageSize(VC0706_160x120);          // small
+
+  // You can read the size back from the camera (optional, but maybe useful?)
+  uint8_t imgsize = cam.getImageSize();    
+  } else {
+    cameracheck=false;
+  }
 }
 
 
@@ -2743,9 +2759,9 @@ static void lcdChar(byte c) {
 		if (cursorX > 0) {
 	
 			cursorX -= 1;	//Go back one
-			screenMem[252 + cursorX] = 32;	//Erase it from memory
-			doEraseFrame(252 + cursorX); //Redraw screen up to that amount
-			doFrame(252 + cursorX); //Redraw screen up to that amount
+			screenMem[325 + cursorX] = 32;	//Erase it from memory
+			doEraseFrame(325 + cursorX); //Redraw screen up to that amount
+			doFrame(325 + cursorX); //Redraw screen up to that amount
 			
 		}
 	
@@ -2753,73 +2769,75 @@ static void lcdChar(byte c) {
 
 	if (c != 13 and c != 10 and c != 8) {	//Not a backspace or return, just a normal character
 
-		screenMem[252 + cursorX] = c;
+		screenMem[325 + cursorX] = c;
 		cursorX += 1;
-		if (cursorX < 21) {
+		if (cursorX < 25) {
 	        tft.setCursor(cursorX*6+3,13*8+3);		
 		tft.write(c);
 		}
 		
 	}
 	
-	if (cursorX == 21 or c == 10) {			//Did we hit Enter or go type past the end of a visible line?
+	if (cursorX == 25 or c == 10) {			//Did we hit Enter or go type past the end of a visible line?
 	doEraseLine();
-
-        doEraseFrame(252);	
-		for (int xg = 0 ; xg < 21 ; xg++) {
-			screenMem[0 + xg] = screenMem[21 + xg];//1
-			screenMem[21 + xg] = screenMem[42 + xg];//2		
-			screenMem[42 + xg] = screenMem[63 + xg];//3
-			screenMem[63 + xg] = screenMem[84 + xg];//4
-			screenMem[84 + xg] = screenMem[105 + xg];//5
-			screenMem[105 + xg] = screenMem[126 + xg];//6		
-			screenMem[126 + xg] = screenMem[147 + xg];//7
-			screenMem[147 + xg] = screenMem[168 + xg];//8
-			screenMem[168 + xg] = screenMem[189 + xg];//9
-			screenMem[189 + xg] = screenMem[210 + xg];//10
-			screenMem[210 + xg] = screenMem[231 + xg];//10
-			screenMem[231 + xg] = screenMem[252 + xg];//11
-			screenMem[252 + xg] = screenMem[273 + xg];//12
-			screenMem[273 + xg] = 32;		
+        
+        doEraseFrame(325);	
+		for (int xg = 0 ; xg < 25 ; xg++) {
+			screenMem[0 + xg] = screenMem[25 + xg];//1
+			screenMem[25 + xg] = screenMem[50 + xg];//2		
+			screenMem[50 + xg] = screenMem[75 + xg];//3
+			screenMem[75 + xg] = screenMem[100 + xg];//4
+			screenMem[100 + xg] = screenMem[125 + xg];//5
+			screenMem[125 + xg] = screenMem[150 + xg];//6		
+			screenMem[150 + xg] = screenMem[175 + xg];//7
+			screenMem[175 + xg] = screenMem[200 + xg];//8
+			screenMem[200 + xg] = screenMem[225 + xg];//9
+			screenMem[225 + xg] = screenMem[250 + xg];//10
+			screenMem[250 + xg] = screenMem[275 + xg];//10
+			screenMem[275 + xg] = screenMem[300 + xg];//11
+			screenMem[300 + xg] = screenMem[325 + xg];//12
+			screenMem[325 + xg] = 32;		
 		}
 	
 		cursorX = 0;
-		doFrame(252);	
+		doFrame(325);	
 	}
 
 
 }
 
-static void doFrame(byte amount) {
+static void doFrame(int amount) {
         int xposi,yposi,yshift;
 	for (int xg = 0 ; xg < amount ; xg++) {
-                yshift=int(xg/21.0);
+                yshift=int(xg/25.0);
                 yposi=yshift*8+3;
-                xposi=(xg-yshift*21)*6+5;
+                xposi=(xg-yshift*25)*6+5;
                 tft.setTextColor(ST7735_GREEN);
 	        tft.setCursor(xposi,yposi);
 		tft.write(screenMem[xg]);
 	}
 }
 
-static void doEraseFrame(byte amount) {
+static void doEraseFrame(int amount) {
         int xposi,yposi,yshift;
 	for (int xg = 0 ; xg < amount ; xg++) {
-                yshift=int(xg/21.0);
+                yshift=int(xg/25.0);
                 yposi=yshift*8+3;
-                xposi=(xg-yshift*21)*6+5;
+                xposi=(xg-yshift*25)*6+5;
                 tft.setTextColor(ST7735_BLACK);
 	        tft.setCursor(xposi,yposi);
 		tft.write(screenMem[xg]);
 	}
 }
 
+
 static void doEraseLine() {
         int xposi,yposi,yshift;
-                yshift=13;
+                yshift=14;
                 yposi=yshift*8+3;
 	        tft.fillRect(0,yposi-8,160,yposi,ST7735_BLACK);
 }
+///////////////////////////////
 
 /***********************************************************/
 /* SD Card helpers */
