@@ -2620,7 +2620,7 @@ void setup()
 
   // Initialize FlashAir.
   printmsg(initialair);  
-  if (card.init(SPI_HALF_SPEED, chipSelectPin)) {
+  if (card.init2(SPI_HALF_SPEED, chipSelectPin)) {
     printmsg(sdfilemsg);
   } else {
     printmsg(sderrormsg);

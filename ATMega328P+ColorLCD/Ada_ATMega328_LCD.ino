@@ -297,8 +297,8 @@ enum {
   kStreamEEProm,
   kStreamFile
 };
-static unsigned char inStream = kStreamSerial;
-static unsigned char outStream = kStreamSerial;
+const unsigned char inStream = kStreamSerial;
+const unsigned char outStream = kStreamSerial;
 
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -324,15 +324,15 @@ typedef short unsigned LINENUM;
 #endif
 
 
-static unsigned char program[kRamSize];
+const unsigned char program[kRamSize];
 static const char *  sentinel = "HELLO";
-static unsigned char *txtpos,*list_line;
-static unsigned char expression_error;
-static unsigned char *tempsp;
+const unsigned char *txtpos,*list_line;
+const unsigned char expression_error;
+const unsigned char *tempsp;
 
 /***********************************************************/
 // Keyword table and constants - the last character has 0x80 added to it
-static unsigned char keywords[] PROGMEM = {
+const unsigned char keywords[] PROGMEM = {
   'L','I','S','T'+0x80,
   'L','O','A','D'+0x80,
   'N','E','W'+0x80,
@@ -444,7 +444,7 @@ struct stack_gosub_frame {
   unsigned char *txtpos;
 };
 
-static unsigned char func_tab[] PROGMEM = {
+const unsigned char func_tab[] PROGMEM = {
   'P','E','E','K'+0x80,
   'A','B','S'+0x80,
   'A','R','E','A','D'+0x80,
@@ -459,17 +459,17 @@ static unsigned char func_tab[] PROGMEM = {
 #define FUNC_RND     4
 #define FUNC_UNKNOWN 5
 
-static unsigned char to_tab[] PROGMEM = {
+const unsigned char to_tab[] PROGMEM = {
   'T','O'+0x80,
   0
 };
 
-static unsigned char step_tab[] PROGMEM = {
+const unsigned char step_tab[] PROGMEM = {
   'S','T','E','P'+0x80,
   0
 };
 
-static unsigned char relop_tab[] PROGMEM = {
+const unsigned char relop_tab[] PROGMEM = {
   '>','='+0x80,
   '<','>'+0x80,
   '>'+0x80,
@@ -489,7 +489,7 @@ static unsigned char relop_tab[] PROGMEM = {
 #define RELOP_NE_BANG		6
 #define RELOP_UNKNOWN	7
 
-static unsigned char highlow_tab[] PROGMEM = { 
+const unsigned char highlow_tab[] PROGMEM = { 
   'H','I','G','H'+0x80,
   'H','I'+0x80,
   'L','O','W'+0x80,
@@ -502,16 +502,16 @@ static unsigned char highlow_tab[] PROGMEM = {
 #define STACK_SIZE (sizeof(struct stack_for_frame)*5)
 #define VAR_SIZE sizeof(short int) // Size of variables in bytes
 
-static unsigned char *stack_limit;
-static unsigned char *program_start;
-static unsigned char *program_end;
-static unsigned char *stack; // Software stack for things that should go on the CPU stack
-static unsigned char *variables_begin;
-static unsigned char *current_line;
-static unsigned char *sp1;
+const unsigned char *stack_limit;
+const unsigned char *program_start;
+const unsigned char *program_end;
+const unsigned char *stack; // Software stack for things that should go on the CPU stack
+const unsigned char *variables_begin;
+const unsigned char *current_line;
+const unsigned char *sp1;
 #define STACK_GOSUB_FLAG 'G'
 #define STACK_FOR_FLAG 'F'
-static unsigned char table_index;
+const unsigned char table_index;
 static LINENUM linenum;
 
 static const unsigned char okmsg[]            PROGMEM = "READY";
@@ -540,7 +540,7 @@ static int inchar(void);
 static void outchar(unsigned char c);
 static void line_terminator(void);
 static short int expression(void);
-static unsigned char breakcheck(void);
+const unsigned char breakcheck(void);
 /***************************************************************************/
 static void ignore_blanks(void)
 {
@@ -597,7 +597,7 @@ static void pushb(unsigned char b)
 }
 
 /***************************************************************************/
-static unsigned char popb()
+const unsigned char popb()
 {
   unsigned char b;
   b = *sp1;
@@ -669,7 +669,7 @@ static unsigned short testnum(void)
 }
 
 /***************************************************************************/
-static unsigned char print_quoted_string(void)
+const unsigned char print_quoted_string(void)
 {
   int i=0;
   unsigned char delim = *txtpos;
@@ -752,7 +752,7 @@ static void getln(char prompt)
 }
 
 /***************************************************************************/
-static unsigned char *findline(void)
+const unsigned char *findline(void)
 {
   unsigned char *line = program_start;
   while(1)
@@ -2565,7 +2565,7 @@ void setup()
 
 
 /***********************************************************/
-static unsigned char breakcheck(void)
+const unsigned char breakcheck(void)
 {
 #ifdef ARDUINO
   if(Serial.available())

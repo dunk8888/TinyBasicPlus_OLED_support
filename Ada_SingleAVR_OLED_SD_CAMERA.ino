@@ -310,14 +310,14 @@ typedef short unsigned LINENUM;
 
 
 static unsigned char program[kRamSize];
-static const char *  sentinel = "HELLO";
+//static const char *sentinel = "HELLO";
 static unsigned char *txtpos,*list_line;
 static unsigned char expression_error;
 static unsigned char *tempsp;
 
 /***********************************************************/
 // Keyword table and constants - the last character has 0x80 added to it
-static unsigned char keywords[] PROGMEM = {
+const unsigned char keywords[] PROGMEM = {
   'L','I','S','T'+0x80,
   'L','O','A','D'+0x80,
   'N','E','W'+0x80,
@@ -432,7 +432,7 @@ struct stack_gosub_frame {
   unsigned char *txtpos;
 };
 
-static unsigned char func_tab[] PROGMEM = {
+const unsigned char func_tab[] PROGMEM = {
   'P','E','E','K'+0x80,
   'A','B','S'+0x80,
   'A','R','E','A','D'+0x80,
@@ -447,17 +447,17 @@ static unsigned char func_tab[] PROGMEM = {
 #define FUNC_RND     4
 #define FUNC_UNKNOWN 5
 
-static unsigned char to_tab[] PROGMEM = {
+const unsigned char to_tab[] PROGMEM = {
   'T','O'+0x80,
   0
 };
 
-static unsigned char step_tab[] PROGMEM = {
+const unsigned char step_tab[] PROGMEM = {
   'S','T','E','P'+0x80,
   0
 };
 
-static unsigned char relop_tab[] PROGMEM = {
+const unsigned char relop_tab[] PROGMEM = {
   '>','='+0x80,
   '<','>'+0x80,
   '>'+0x80,
@@ -477,7 +477,7 @@ static unsigned char relop_tab[] PROGMEM = {
 #define RELOP_NE_BANG		6
 #define RELOP_UNKNOWN	7
 
-static unsigned char highlow_tab[] PROGMEM = { 
+const unsigned char highlow_tab[] PROGMEM = { 
   'H','I','G','H'+0x80,
   'H','I'+0x80,
   'L','O','W'+0x80,
@@ -545,7 +545,7 @@ static void ignore_blanks(void)
 
 
 /***************************************************************************/
-static void scantable(unsigned char *table)
+static void scantable(const unsigned char *table)
 {
   int i = 0;
   table_index = 0;
@@ -2429,7 +2429,8 @@ snap:
   {
 
   printmsg(picmsg);
-  delay(2000);
+  delay(1000);
+  //cam.reset();
       outStream = kStreamFile;
   if (! cam.takePicture())
   {
@@ -2484,6 +2485,7 @@ snap:
 //  Serial.print(time); Serial.println(" ms elapsed");
 ///////
     outStream = kStreamSerial;
+    cam.reset();
     goto run_next_statement;
   }
 
