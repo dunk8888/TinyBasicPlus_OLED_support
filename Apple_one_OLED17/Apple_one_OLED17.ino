@@ -12,6 +12,7 @@
 
 // OLED flame buffer added Mar. 29, 2015 kodera2t
 // cpu.c is un-touched. 
+// April 5, 2015, cpu.c is modified for Arduino IDE 1.7.0
 //////////////// Newly added for graphic OLED(LCD) 128x64 support/////////////
 #include <SPI.h>
 #include <Wire.h>
