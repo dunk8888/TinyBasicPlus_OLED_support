@@ -297,8 +297,8 @@ enum {
   kStreamEEProm,
   kStreamFile
 };
-const unsigned char inStream = kStreamSerial;
-const unsigned char outStream = kStreamSerial;
+static unsigned char inStream = kStreamSerial;
+static unsigned char outStream = kStreamSerial;
 
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -324,11 +324,11 @@ typedef short unsigned LINENUM;
 #endif
 
 
-const unsigned char program[kRamSize];
+static unsigned char program[kRamSize];
 static const char *  sentinel = "HELLO";
-const unsigned char *txtpos,*list_line;
-const unsigned char expression_error;
-const unsigned char *tempsp;
+static unsigned char *txtpos,*list_line;
+static unsigned char expression_error;
+static unsigned char *tempsp;
 
 /***********************************************************/
 // Keyword table and constants - the last character has 0x80 added to it
@@ -502,16 +502,16 @@ const unsigned char highlow_tab[] PROGMEM = {
 #define STACK_SIZE (sizeof(struct stack_for_frame)*5)
 #define VAR_SIZE sizeof(short int) // Size of variables in bytes
 
-const unsigned char *stack_limit;
-const unsigned char *program_start;
-const unsigned char *program_end;
-const unsigned char *stack; // Software stack for things that should go on the CPU stack
-const unsigned char *variables_begin;
-const unsigned char *current_line;
-const unsigned char *sp1;
+static unsigned char *stack_limit;
+static unsigned char *program_start;
+static unsigned char *program_end;
+static unsigned char *stack; // Software stack for things that should go on the CPU stack
+static unsigned char *variables_begin;
+static unsigned char *current_line;
+static unsigned char *sp1;
 #define STACK_GOSUB_FLAG 'G'
 #define STACK_FOR_FLAG 'F'
-const unsigned char table_index;
+static unsigned char table_index;
 static LINENUM linenum;
 
 static const unsigned char okmsg[]            PROGMEM = "READY";
@@ -550,7 +550,7 @@ static void ignore_blanks(void)
 
 
 /***************************************************************************/
-static void scantable(unsigned char *table)
+static void scantable(const unsigned char *table)
 {
   int i = 0;
   table_index = 0;
@@ -752,7 +752,7 @@ static void getln(char prompt)
 }
 
 /***************************************************************************/
-const unsigned char *findline(void)
+static unsigned char *findline(void)
 {
   unsigned char *line = program_start;
   while(1)
