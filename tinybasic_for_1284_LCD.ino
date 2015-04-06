@@ -19,6 +19,7 @@
 //        EEPROM support, ATMEGA1284P support, and character LCD support.
 //        Input source is assuming serial line (hyper terminal on the computer or modified
 //        Xbox360 chatpad...
+// Arduino 1.7.0 supporting..
 // v0.14: 19/04/2014
 //      TVout and PS2uartKeyboard Libraries added.
 //
@@ -106,10 +107,28 @@
 
 // IF testing with Visual C, this needs to be the first thing in the file.
 //#include "stdafx.h"
-#include <EEPROM.h>
+// This enables LOAD, SAVE, FILES commands through the Arduino SD Library
+// it adds 9k of usage as well.
+#define ENABLE_FILEIO 1
+//#undef ENABLE_FILEIO
+
+#ifdef ENABLE_FILEIO
+#include <SD.h>
+#include <SPI.h> /* needed as of 1.5 beta */
+
+// Arduino-specific configuration
+// set this to the card select for your SD shield
+#define kSD_CS 4
+
+#define kSD_Fail  0
+#define kSD_OK    1
+
+File fp;
+#endif
+
 #include <LiquidCrystalFast.h>
 LiquidCrystalFast lcd(19,12,13,14,  15,20,21,22);		// initialize the library with the numbers of the interface pins
-#include <Servo.h> 
+//#include <Servo.h> 
 
 char eliminateCompileErrors = 1;  // fix to suppress arduino build errors
 uint8_t nRows = 4;      //number of rows on LCD
@@ -124,10 +143,7 @@ uint8_t nColumns =40;   //number of columns
 ////////////////////////////////////////////////////////////////////////////////
 // Feature option configuration...
 
-// This enables LOAD, SAVE, FILES commands through the Arduino SD Library
-// it adds 9k of usage as well.
-#define ENABLE_FILEIO 1
-//#undef ENABLE_FILEIO
+
 
 // this turns on "autorun".  if there's FileIO, and a file "autorun.bas",
 // then it will load it and run it when starting up
@@ -186,25 +202,13 @@ int eepos = 0;
 #endif
 
 
-#ifdef ENABLE_FILEIO
-#include <SD.h>
-#include <SPI.h> /* needed as of 1.5 beta */
 
-// Arduino-specific configuration
-// set this to the card select for your SD shield
-#define kSD_CS 4
-
-#define kSD_Fail  0
-#define kSD_OK    1
-
-File fp;
-#endif
-#define RAMEND 10000
+//#define RAMEND 10000
 // set up our RAM buffer size for program and user input
 // NOTE: This number will have to change if you include other libraries.
 #ifdef ARDUINO
 #ifdef ENABLE_FILEIO
-#define kRamFileIO (1100) /* approximate */
+#define kRamFileIO (1030) /* approximate */
 #else
 #define kRamFileIO (0)
 #endif
@@ -214,8 +218,8 @@ File fp;
 #define kRamTones (0)
 #endif
 #endif /* ARDUINO */
-#define kRamSize  (RAMEND -1700 - kRamFileIO - kRamTones) 
-//#define kRamSize 
+#define kRamSize  (RAMEND - 1800 - kRamFileIO - kRamTones) 
+//#define kRamSize 8000
 #ifndef ARDUINO
 // Not arduino setup
 #include <stdio.h>
@@ -311,7 +315,7 @@ static unsigned char *tempsp;
 
 /***********************************************************/
 // Keyword table and constants - the last character has 0x80 added to it
-static unsigned char keywords[] PROGMEM = {
+const unsigned char keywords[] PROGMEM = {
   'L','I','S','T'+0x80,
   'L','O','A','D'+0x80,
   'N','E','W'+0x80,
@@ -403,7 +407,7 @@ struct stack_gosub_frame {
   unsigned char *txtpos;
 };
 
-static unsigned char func_tab[] PROGMEM = {
+const unsigned char func_tab[] PROGMEM = {
   'P','E','E','K'+0x80,
   'A','B','S'+0x80,
   'A','R','E','A','D'+0x80,
@@ -418,17 +422,17 @@ static unsigned char func_tab[] PROGMEM = {
 #define FUNC_RND     4
 #define FUNC_UNKNOWN 5
 
-static unsigned char to_tab[] PROGMEM = {
+const unsigned char to_tab[] PROGMEM = {
   'T','O'+0x80,
   0
 };
 
-static unsigned char step_tab[] PROGMEM = {
+const unsigned char step_tab[] PROGMEM = {
   'S','T','E','P'+0x80,
   0
 };
 
-static unsigned char relop_tab[] PROGMEM = {
+const unsigned char relop_tab[] PROGMEM = {
   '>','='+0x80,
   '<','>'+0x80,
   '>'+0x80,
@@ -448,7 +452,7 @@ static unsigned char relop_tab[] PROGMEM = {
 #define RELOP_NE_BANG		6
 #define RELOP_UNKNOWN	7
 
-static unsigned char highlow_tab[] PROGMEM = { 
+const unsigned char highlow_tab[] PROGMEM = { 
   'H','I','G','H'+0x80,
   'H','I'+0x80,
   'L','O','W'+0x80,
@@ -509,7 +513,7 @@ static void ignore_blanks(void)
 
 
 /***************************************************************************/
-static void scantable(unsigned char *table)
+static void scantable(const unsigned char *table)
 {
   int i = 0;
   table_index = 0;
