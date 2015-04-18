@@ -8,6 +8,7 @@
 //          kodera2t
 
 #define kVersion "v0.15"
+// v0.15bis-bis 18/04/2015 Thermal printer support with command "llist" and "lprint"
 // v0.15bis 23/02/2015
 //     SSD1306 compatible OLED (128x64 dots) with SD card supported.
 
